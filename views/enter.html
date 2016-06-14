@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-transform " />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>剪子包袱锤</title>
+    <link rel="stylesheet" href="css/style.css" type="text/css">
+    <script src="lib/socket.io.js"></script>
+    <script src="lib/fastclick.js"></script>
+    <script src="lib/jquery-1.7.2.min.js"></script>
+    <script src="lib/shake.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    jQuery(document).ready(function($) {
+    var socket = io();
+    //解析url里是否有“phone”的字符段
+    function GetQueryString(name)
+    {
+         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+         var r = window.location.search.substr(1).match(reg);
+         if(r!=null)return  unescape(r[2]); return null;
+    }
+     //判断是否为移动端设备
+    if(GetQueryString('device')=="phone"){
+        //向服务端推送检查用户的请求
+        socket.emit('userEnter');
+
+        //页面绑定用户
+        socket.on('setUser',function(data){
+            if(!$('body').attr('data-status')){
+                $('body').attr('data-status',true);
+                $('body').attr('data-bind', "user"+data.userBind);
+            }
+        })
+
+
+    }else{
+        //页面绑定用户
+        socket.on('setUser',function(data){
+            alert(data.userBind)
+            $("#user"+data.userBind).addClass('on');
+        })
+        //当一个用户进入时显示等待用户以及二维码
+        socket.on('firstIn',function(){
+            $("#empty2").addClass('on');
+            $('.e-enter-control ul li.e-waiting').delay(1000).fadeIn(300)
+        })
+
+        //当第二个用户进入时，显示用户2，显示游戏
+        socket.on('showGame',function(){
+            $("#empty2").removeClass('on');
+        })
+        
+    }
+
+
+    })
+    </script>
+</head>
+<body>
+    <!-- enter page panel -->
+    <section class="ui-enter">
+        <div class="ui-user-left" id="user1">
+            <ul>
+                <li><img src="../images/enter/left-mask.png" alt=""></li>
+                <li><img src="../images/enter/left-shadow.png" alt=""></li>
+                <li><img src="../images/enter/left-user.png" alt=""></li>
+            </ul>
+        </div>
+        <div class="ui-user-right" id="user2">
+            <ul>
+                <li><img src="../images/enter/right-mask.png" alt=""></li>
+                <li><img src="../images/enter/right-shadow.png" alt=""></li>
+                <li><img src="../images/enter/right-user.png" alt=""></li>
+            </ul>
+        </div>
+        <div class="ui-user-empty" id="empty2">
+            <ul>
+                <li><img src="../images/enter/right-mask.png" alt=""></li>
+                <li><img src="../images/enter/roles.png" alt=""></li>
+                <li><img src="../images/enter/qr.png" alt=""></li>
+            </ul>
+        </div>
+        <div class="ui-enter-control e-enter-control">
+            <ul>
+                <li class="waiting e-waiting"><img src="../images/enter/waiting.png" alt=""></li>
+                <li></li>
+            </ul>
+        </div>
+    </section>
+</body>

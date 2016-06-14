@@ -1,0 +1,341 @@
+body, input, button, textarea {
+  font-size: 14px;
+  -webkit-text-size-adjust: none;
+}
+
+body, div, dl, dt, dd, ul, ol, li, h1, h2, h3, h4, h5, h6, pre, form, fieldset, input, p, blockquote, th, td, span, img {
+  margin: 0;
+  padding: 0;
+  border: 0;
+}
+
+body, input, a, button, select {
+  font-family:WenQuanYi Micro Hei,文泉驿微黑,文泉驿微米黑,"微软雅黑", Arial, SimHei;
+  -webkit-tap-highlight-color: rgba(0, 0, 0, 0);
+  -webkit-tap-highlight-color: transparent;
+}
+
+input:focus, textarea:focus {
+  outline: none;
+}
+
+body {
+  min-width: 320px;
+  overflow: hidden;
+  color: #000;
+  font-family: "NeueHelvetica-bdcn","Microsoft YaHei","微软雅黑", Arial, Helvetica,sans-serif;
+}
+
+/* HTML5 display-role reset for older browsers */
+article, aside, details, figcaption, figure, footer, header, hgroup, menu, nav, section {
+  display: block;
+}
+
+input[type="text"], input[type="password"], input[type="number"], input[type="button"], input[type="email"], input[type="search"], button {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  /* mobile firefox too! */
+  border-radius: 0;
+  -webkit-border-radius: 0;
+  -moz-border-radius: 0;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+  -moz-box-sizing: border-box;
+  font-family: "NeueHelvetica-bdcn","Microsoft YaHei","微软雅黑", Arial, Helvetica,sans-serif;
+}
+
+ul, ol, dl {
+  list-style: none;
+}
+
+img {
+  display: block;
+}
+
+a {
+  text-decoration: none;
+  color: #000;
+}
+
+a:link {
+  color: #000;
+}
+
+/* 未访问的链接 */
+a:visited {
+  color: #000;
+}
+
+/* 已访问的链接 */
+a:hover {
+  color: #000;
+}
+
+/* 当有鼠标悬停在链接上 */
+a:active {
+  color: #000;
+}
+
+/* 被选择的链接 */
+/*reset the scroll bar style*/
+/*common class公共类定义区域*/
+.clearfix:after {
+  content: "";
+  display: block;
+  height: 0;
+  clear: both;
+  visibility: hidden;
+}
+
+.clearfix {
+  display: block;
+}
+
+input::-webkit-input-placeholder {
+  /* WebKit browsers */
+  font-size: 13px;
+  color: #000;
+}
+
+input:-moz-placeholder {
+  /* Mozilla Firefox 4 to 18 */
+  color: #000;
+}
+
+input::-moz-placeholder {
+  /* Mozilla Firefox 19+ */
+  color: #000;
+}
+
+input:-ms-input-placeholder {
+  /* Internet Explorer 10+ */
+  color: #000;
+}
+
+/*index page*/
+.ui-index{
+	position:absolute;
+	left: 0px;
+	top: 0px;
+	width:100%;
+	height:100%;
+	background:url(../images/index/home-bg.jpg) no-repeat center;
+	background-size: cover;
+}
+.ui-index-con ul li.title{
+	position:absolute;
+	top:100px;
+	right: 100px;
+}
+
+.ui-index-con ul li.qr{
+	position:absolute;
+	top:350px;
+	right: 250px;
+}
+.ui-index-con ul li.makeup{
+	position:absolute;
+	bottom:20px;
+	right: 50px;
+}
+.ui-index-cloud ul li{
+	position:absolute;
+	left:-200px;
+
+}
+.ui-index-cloud ul li:nth-of-type(1){
+	-webkit-animation:fly 20s 0.2s ease infinite ;
+	-moz-animation:fly 20s 0.2s ease infinite ;}
+.ui-index-cloud ul li:nth-of-type(2){
+	top:60px;
+	opacity:0.8;
+	-webkit-animation:fly 25s 1s linear infinite ;
+	-moz-animation:fly 25s 1s linear infinite ;}
+.ui-index-cloud ul li:nth-of-type(3){
+	top:120px;
+	-webkit-animation:fly 15s 2.2s linear infinite ;
+	-moz-animation:fly 15s 2.2s linear infinite ;}
+.ui-index-cloud ul li:nth-of-type(4){
+	top:75px;
+	-webkit-animation:fly 35s 4.6s linear infinite ;
+	-moz-animation:fly 35s 4.6s linear infinite ;}
+.ui-index-cloud ul li:nth-of-type(5){
+	top:30px;
+	opacity:0.8;
+	-webkit-animation:fly 45s 6.5s ease infinite ;
+	-moz-animation:fly 45s 6.5s ease infinite ;}
+.ui-index-cloud ul li img{
+	width:180px;
+}
+.ui-index-cloud ul li:nth-of-type(2) img{
+	width:120px;
+}
+.ui-index-cloud ul li:nth-of-type(3) img{
+	width:160px;
+}
+.ui-index-cloud ul li:nth-of-type(4) img{
+	width:100px;
+}
+
+
+/* enter page */
+.ui-enter{
+	position:absolute;
+	left: 0px;
+	top: 0px;
+	width:100%;
+	height:100%;
+	background:url(../images/enter/user-enter.jpg) no-repeat center;
+	background-size: cover;
+}
+.ui-user-left{
+	position:absolute;
+	left: -890px;
+	top: 0px;
+    transition: all 500ms ease;
+    -webkit-transition: all 500ms ease;
+    -moz-transition: all 500ms ease;
+}
+.ui-user-left ul li{
+	position:absolute;
+	left: 0px;
+	top: 0px;
+}
+.ui-user-right,
+.ui-user-empty{
+	position:absolute;
+	right: -890px;
+	top: 0px;
+    transition: all 500ms ease;
+    -webkit-transition: all 500ms ease;
+    -moz-transition: all 500ms ease;
+}
+.ui-user-right ul li,
+.ui-user-empty ul li{
+	position:absolute;
+	right: 0px;
+	top: 0px;
+}
+.ui-user-left.on{
+	left:0;
+}
+.ui-user-right.on,
+.ui-user-empty.on{
+	right:0;
+}
+.ui-user-left.on ul li:nth-of-type(1){
+	-webkit-animation:bounceInLeft 0.8s .5s ease both;
+	-moz-animation:bounceInLeft 0.8s .5s ease both;
+}
+.ui-user-left.on ul li:nth-of-type(2){
+	-webkit-animation:bounceInLeft 0.8s 1s ease both;
+	-moz-animation:bounceInLeft 0.8s 1s ease both;
+
+}
+.ui-user-left.on ul li:nth-of-type(3){
+	-webkit-animation:bounceInLeft 0.8s 1.2s ease both;
+	-moz-animation:bounceInLeft 0.8s 1.2s ease both;
+
+}
+
+.ui-user-right.on ul li:nth-of-type(1),
+.ui-user-empty.on ul li:nth-of-type(1){
+	-webkit-animation:bounceInRight 0.8s .5s ease both;
+	-moz-animation:bounceInRight 0.8s .5s ease both;
+}
+.ui-user-right.on ul li:nth-of-type(2),
+.ui-user-empty.on ul li:nth-of-type(2){
+	-webkit-animation:bounceInRight 0.8s 1s ease both;
+	-moz-animation:bounceInRight 0.8s 1s ease both;
+
+}
+.ui-user-right.on ul li:nth-of-type(3),
+.ui-user-empty.on ul li:nth-of-type(3){
+	-webkit-animation:bounceInRight 0.8s 1.2s ease both;
+	-moz-animation:bounceInRight 0.8s 1.2s ease both;
+
+}
+
+
+.ui-enter-control{
+	position:relative;
+	margin:0 auto;
+	width:500px;
+	text-align: center;
+	z-index: 10;
+	margin-top: 450px;
+}
+.ui-enter-control ul li{
+	display:none;
+}
+.ui-enter-control ul li img{
+	display:inline-block;
+}
+
+.ui-enter-control ul li.waiting{
+	-webkit-animation:flash 3s 1s infinite both;
+	-moz-animation:flash 3s 1s infinite both;}
+
+}
+
+/* fly animation */
+	@-webkit-keyframes fly{
+		0%{
+		left:-180px;
+		} 100%{
+		left:100%;
+		} 
+	}
+	@-moz-keyframes fly{
+		0%{
+		left:-100px;
+		} 100%{
+		left:100%;
+		} 
+	}
+
+/* bounceInLeft animation */
+@-webkit-keyframes bounceInLeft{
+0%{opacity:0;
+-webkit-transform:translateX(-2000px)}
+60%{opacity:1;
+-webkit-transform:translateX(0px)}
+80%{-webkit-transform:translateX(-10px)}
+100%{-webkit-transform:translateX(0)}
+}
+@-moz-keyframes bounceInLeft{
+0%{opacity:0;
+-moz-transform:translateX(-2000px)}
+60%{opacity:1;
+-moz-transform:translateX(0px)}
+80%{-moz-transform:translateX(-10px)}
+100%{-moz-transform:translateX(0)}
+}
+
+
+/* bounceInRight animation */
+@-webkit-keyframes bounceInRight{
+0%{opacity:0;
+-webkit-transform:translateX(2000px)}
+60%{opacity:1;
+-webkit-transform:translateX(0px)}
+80%{-webkit-transform:translateX(10px)}
+100%{-webkit-transform:translateX(0)}
+}
+@-moz-keyframes bounceInRight{
+0%{opacity:0;
+-moz-transform:translateX(2000px)}
+60%{opacity:1;
+-moz-transform:translateX(0px)}
+80%{-moz-transform:translateX(10px)}
+100%{-moz-transform:translateX(0)}
+}
+/* flash eff */
+@-webkit-keyframes flash{
+0%,50%,100%{opacity: 1;}
+25%,75%{opacity: 0;}
+}
+@-moz-keyframes flash{
+0%,50%,100%{opacity: 1;}
+25%,75%{opacity: 0;}
+}

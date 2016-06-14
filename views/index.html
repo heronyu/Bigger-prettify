@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta http-equiv="Cache-Control" content="no-transform " />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <meta name="format-detection" content="telephone=no" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <title>剪子包袱锤</title>
+    <link rel="stylesheet" href="css/style.css" type="text/css">
+    <script src="lib/socket.io.js"></script>
+    <script src="lib/fastclick.js"></script>
+    <script src="lib/jquery-1.7.2.min.js"></script>
+    <script src="lib/shake.js"></script>
+    <script src="js/main.js"></script>
+    <script>
+    jQuery(document).ready(function($) {
+    var socket = io();
+    //解析url里是否有“phone”的字符段
+    function GetQueryString(name)
+    {
+         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
+         var r = window.location.search.substr(1).match(reg);
+         if(r!=null)return  unescape(r[2]); return null;
+    }
+     //判断是否为移动端设备
+    if(GetQueryString('device')!=="phone"){
+        socket.on('pcToEnter',function(msg){
+            window.location.href="enter"
+        })
+    }
+
+    })
+    </script>
+</head>
+<body>
+    <!-- home page panel -->
+    <section class="ui-index">
+        <div class="ui-index-con">
+            <ul>
+                <li class="title"><img src="../images/index/title.png" alt=""></li>
+                <li class="qr"><img src="../images/index/QR.png" alt=""></li>
+                <li class="makeup"><img src="../images/index/makeup.png" alt=""></li>
+            </ul>
+        </div>
+        <div class="ui-index-cloud">
+            <ul>
+                <li><img src="../images/index/cloud.png" alt=""></li>
+                <li><img src="../images/index/cloud.png" alt=""></li>
+                <li><img src="../images/index/cloud.png" alt=""></li>
+                <li><img src="../images/index/cloud.png" alt=""></li>
+                <li><img src="../images/index/cloud.png" alt=""></li>
+            </ul>
+        </div>
+    </section>
+</body>
