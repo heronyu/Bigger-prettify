@@ -7,55 +7,98 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="format-detection" content="telephone=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <title>剪子包袱锤</title>
+    <title>石头剪刀布</title>
     <link rel="stylesheet" href="css/style.css" type="text/css">
     <script src="lib/socket.io.js"></script>
-    <script src="lib/fastclick.js"></script>
     <script src="lib/jquery-1.7.2.min.js"></script>
-    <script src="lib/shake.js"></script>
-    <script src="js/main.js"></script>
     <script>
     jQuery(document).ready(function($) {
     var socket = io();
-    //解析url里是否有“phone”的字符段
-    function GetQueryString(name)
-    {
-         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-         var r = window.location.search.substr(1).match(reg);
-         if(r!=null)return  unescape(r[2]); return null;
-    }
-     //判断是否为移动端设备
-    if(GetQueryString('device')=="phone"){
-        //向服务端推送检查用户的请求
-        socket.emit('userEnter');
 
-        //页面绑定用户
-        socket.on('setUser',function(data){
-            if(!$('body').attr('data-status')){
-                $('body').attr('data-status',true);
-                $('body').attr('data-bind', "user"+data.userBind);
-            }
+        socket.emit('checkUser');
+
+        //当单个或者两个用处进入时，出现对应角色
+        socket.on('oneIn',function(){
+            $('#user1,#empty2').addClass('on');
+            $('.e-enter-control ul li.e-waiting').fadeIn(100);
         })
 
-
-    }else{
-        //页面绑定用户
-        socket.on('setUser',function(data){
-            alert(data.userBind)
-            $("#user"+data.userBind).addClass('on');
+        socket.on('allIn',function(){
+            $('#empty2').removeClass('on')
+            $('#user1,#user2').addClass('on')
+            $('.e-enter-control ul li.e-waiting').fadeOut(100);
         })
-        //当一个用户进入时显示等待用户以及二维码
+
         socket.on('firstIn',function(){
-            $("#empty2").addClass('on');
-            $('.e-enter-control ul li.e-waiting').delay(1000).fadeIn(300)
+            $('#user1,#empty2').addClass('on');
+            $('.e-enter-control ul li.e-waiting').fadeIn(100);
+        });
+
+        socket.on('showGame',function(){
+            $('#empty2').removeClass('on')
+            $('#user2').addClass('on')
+            $('.e-enter-control ul li.e-waiting').fadeOut(300,function(){
+                    $('.e-action').fadeIn(300);
+            });
         })
 
-        //当第二个用户进入时，显示用户2，显示游戏
-        socket.on('showGame',function(){
-            $("#empty2").removeClass('on');
+
+        //单个用户摇完后显示手势切换的效果
+        socket.on('oneShaked',function(data){
+            $('.e-action').hide();
+            $('.e-enter-hand').show();
         })
-        
-    }
+
+        //接受摇一摇结果，进行对应结果显示
+        socket.on('backResult',function(data){
+
+            //显示手势
+            for(var i=0;i<data.length;i++){
+                for(var a=0;a<$('.e-enter-hand ul').length;a++){
+                    if($('.e-enter-hand ul').eq(a).hasClass(data[i].name)){
+                        $('.e-enter-hand ul.'+data[i].name).removeClass('change');
+                        $('.e-enter-hand ul').eq(a).find('li.'+data[i].score).siblings('li').hide();
+                    }
+                }
+
+            }
+
+            //显示胜利方
+            for(var i=0;i<data.length;i++){
+                for(var a=0;a<$('.e-enter-result ul').length;a++){
+                    if($('.e-enter-result ul').eq(a).hasClass(data[i].name)){
+                        $('.e-enter-result ul').eq(a).find('li.'+data[i].result).addClass('on');
+                    }
+                }
+
+            }
+
+            //显示再来一局/结束游戏
+            $('.e-restart,.e-end').delay(2000).fadeIn(500);
+
+
+        })
+
+
+        //再来一局事件推送
+        $('.e-restart').click(function(event) {
+            $(this).hide();
+            $('.e-end').hide();
+            socket.emit('restartGame');
+        });
+
+
+        //再来一局
+        socket.on('rePlay',function(){
+            $('.e-enter-hand ul li').show();
+            $('.e-enter-hand ul').addClass('change');
+            $('.e-enter-result ul li').removeClass('on')
+        })
+
+
+        $('.e-end,.e-enter-exit').click(function(event) {
+            window.location.href="/";
+        });
 
 
     })
@@ -64,6 +107,7 @@
 <body>
     <!-- enter page panel -->
     <section class="ui-enter">
+        <!-- 用户显示 -->
         <div class="ui-user-left" id="user1">
             <ul>
                 <li><img src="../images/enter/left-mask.png" alt=""></li>
@@ -78,6 +122,8 @@
                 <li><img src="../images/enter/right-user.png" alt=""></li>
             </ul>
         </div>
+
+        <!-- 空缺人物显示 -->
         <div class="ui-user-empty" id="empty2">
             <ul>
                 <li><img src="../images/enter/right-mask.png" alt=""></li>
@@ -85,11 +131,46 @@
                 <li><img src="../images/enter/qr.png" alt=""></li>
             </ul>
         </div>
+        <!-- 各步骤提示 -->
         <div class="ui-enter-control e-enter-control">
             <ul>
                 <li class="waiting e-waiting"><img src="../images/enter/waiting.png" alt=""></li>
-                <li></li>
+                <li class="ui-shake-action e-action">
+                    <div><img src="../images/common/shake.gif" alt="" width="300"></div>
+                    <p>疯狂摇动手机吧！</p>
+                </li>
+                <li class="restart e-restart"><img src="../images/enter/restart.png" alt=""></li>
+                <li class="end e-end"><img src="../images/enter/end.png" alt=""></li>
             </ul>
+        </div>
+
+        <!-- 摇到的手势显示 -->
+        <div class="ui-enter-hand e-enter-hand ">
+            <ul class="change user1">
+                <li class="1"><img src="../images/enter/scissors.png" alt=""></li>
+                <li class="2"><img src="../images/enter/stone.png" alt=""></li>
+                <li class="3"><img src="../images/enter/pack.png" alt=""></li>
+            </ul>
+            <ul class="change user2">
+                <li class="1"><img src="../images/enter/scissors.png" alt=""></li>
+                <li class="2"><img src="../images/enter/stone.png" alt=""></li>
+                <li class="3"><img src="../images/enter/pack.png" alt=""></li>
+            </ul>
+        </div>
+        <!-- 摇到的结果显示 -->
+        <div class="ui-enter-result e-enter-result">
+            <ul class="user1">
+                <li class="win"><img src="../images/enter/winner.png" alt=""></li>
+                <li class="lose"><img src="../images/enter/punish.png" alt=""></li>
+            </ul>
+            <ul class="user2">
+                <li class="win"><img src="../images/enter/winner.png" alt=""></li>
+                <li class="lose"><img src="../images/enter/punish.png" alt=""></li>
+            </ul>
+        </div>
+        <!-- exit to index -->
+        <div class="ui-enter-exit e-enter-exit">
+            <img src="../images/enter/exit.png" width="60" alt="">
         </div>
     </section>
 </body>

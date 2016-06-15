@@ -7,32 +7,144 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="format-detection" content="telephone=no" />
     <meta name="apple-mobile-web-app-capable" content="yes" />
-    <title>剪子包袱锤</title>
+    <title>石头剪刀布</title>
     <link rel="stylesheet" href="css/style.css" type="text/css">
     <script src="lib/socket.io.js"></script>
     <script src="lib/fastclick.js"></script>
     <script src="lib/jquery-1.7.2.min.js"></script>
     <script src="lib/shake.js"></script>
-    <script src="js/main.js"></script>
     <script>
     jQuery(document).ready(function($) {
     var socket = io();
-    //解析url里是否有“phone”的字符段
-    function GetQueryString(name)
-    {
-         var reg = new RegExp("(^|&)"+ name +"=([^&]*)(&|$)");
-         var r = window.location.search.substr(1).match(reg);
-         if(r!=null)return  unescape(r[2]); return null;
-    }
-     //判断是否为移动端设备
-    if(GetQueryString('device')!=="phone"){
-        socket.on('pcToEnter',function(msg){
-        })
-    }
+        //向服务端推送检查用户的请求
+        socket.emit('userEnter');
 
+        //页面绑定用户
+        socket.on('setUser',function(data){
+            if(!$('body').attr('data-status')){
+                $('body').attr('data-status',true);//绑定用户状态
+                $('body').attr('data-bind', "user"+data.userBind);
+                $("#user"+data.userBind).show();
+            }
+        })
+
+        //用户1 进入，显示等待状态
+        socket.on('firstIn',function(){
+            $('.e-waiting').fadeIn(200)
+        })
+
+        //用户2 进入，提示摇手机
+        socket.on('showGame',function(){
+            $('.e-waiting').hide();
+            $('.e-action').fadeIn(200)
+        })
+
+
+        //房间满了
+        socket.on('roomFull',function(){
+            window.location.href="full";
+        })
+
+
+        //摇一摇
+
+        //摇动后向服务端推送事件
+        //晃动手机进行判断
+       /* var myShakeEvent = new Shake({
+            threshold: 15
+        });
+        // start listening to device motion
+        myShakeEvent.start();
+        // register a shake event
+        window.addEventListener('shake', shakeEventDidOccur, false);*/
+        //shake event callback
+
+        /*function shakeEventDidOccur () {
+            //判断当前页面是否是在用户序列里
+            if($('body').attr('data-status')=='true' && $('.e-action').is(":visible")){
+                socket.emit('shakePhone',$('body').attr('data-bind'));
+                //设置status为false，防止由于html5 方向判断不灵敏带来的多次请求问题
+                $('body').attr('data-status', 'false');
+            }
+      
+        }*/
+
+        $('.fakeshake').click(function(event) {
+            /* Act on the event */
+            if($('body').attr('data-status')=='true' && $('.e-action').is(":visible")){
+                socket.emit('shakePhone',$('body').attr('data-bind'));
+                //设置status为false，防止由于html5 方向判断不灵敏带来的多次请求问题
+                $('body').attr('data-status', 'false');
+                $('.e-action').hide();
+
+
+                $('.e-waiting-shake').fadeIn(200)//显示等待对方摇一摇
+
+                //摇晃时添加动态效果
+                var shakeEle=$('body').attr('data-bind');
+                $("#"+shakeEle).addClass('ui-mobile-shake');
+
+            }
+        });
+
+        socket.on('backResult',function(data){
+            $('.e-waiting-shake').hide();
+            for(var i=0;i<data.length;i++){
+                if($('body').attr('data-bind')==data[i].name){
+                    $('.e-mobile-result ul li.'+data[i].result).addClass('on')
+                    }
+                }
+        })
+
+        //再来一局
+        socket.on('rePlay',function(){
+            $('body').attr('data-status', 'true');
+            $('.e-mobile-result ul li').removeClass('on');
+            $('.e-action').show();
+        })
+
+   
     })
     </script>
 </head>
 <body>
-hi
+<div class="ui-mobile-con">
+    <!-- user1 panel -->
+    <div class="ui-mobile-user" id="user1">
+        <ul>
+            <li><img src="../images/mobile/circle-green.png" alt=""></li>
+            <li><img src="../images/mobile/user1.png" alt=""></li>
+        </ul>
+    </div>
+
+    <!-- user2 panel -->
+    <div class="ui-mobile-user" id="user2">
+        <ul>
+            <li><img src="../images/mobile/circle-purple.png" alt=""></li>
+            <li><img src="../images/mobile/user2.png" alt=""></li>
+        </ul>
+    </div>
+    
+    <!-- 手机操作不同状态显示 -->
+    <div class="ui-mobile-status">
+        <input type="button" value="fakeshake" class="fakeshake">
+        <ul>
+            <li class="waiting e-waiting"><img src="../images/enter/waiting.png" alt="" width="240"></li>
+            <li class="ui-mobile-action e-action">
+                <div><img src="../images/common/shake.gif" alt="" width="100">
+                <br>
+                疯狂摇动手机吧</div>
+            </li>
+            <li class="waiting e-waiting-shake"><img src="../images/mobile/waiting-shake.png" alt="" width="240"></li>
+        </ul>
+    </div>
+    <!-- result panel -->
+    <div class="ui-mobile-result e-mobile-result">
+        <ul>
+            <li class="win"><img src="../images/mobile/win.png" alt=""></li>
+            <li class="lose"><img src="../images/mobile/lose.png" alt=""></li>
+            <li class="equal"><img src="../images/mobile/equal.png" alt=""></li>
+        </ul>
+    </div>
+</div>
 </body>
