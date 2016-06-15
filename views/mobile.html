@@ -15,6 +15,8 @@
     <script src="lib/shake.js"></script>
     <script>
     jQuery(document).ready(function($) {
+
+    var audioEle = document.getElementById("e-audio");  
     var socket = io();
         //向服务端推送检查用户的请求
         socket.emit('userEnter');
@@ -50,26 +52,16 @@
 
         //摇动后向服务端推送事件
         //晃动手机进行判断
-       /* var myShakeEvent = new Shake({
+        var myShakeEvent = new Shake({
             threshold: 15
         });
         // start listening to device motion
         myShakeEvent.start();
         // register a shake event
-        window.addEventListener('shake', shakeEventDidOccur, false);*/
+        window.addEventListener('shake', shakeEventDidOccur, false);
         //shake event callback
 
-        /*function shakeEventDidOccur () {
-            //判断当前页面是否是在用户序列里
-            if($('body').attr('data-status')=='true' && $('.e-action').is(":visible")){
-                socket.emit('shakePhone',$('body').attr('data-bind'));
-                //设置status为false，防止由于html5 方向判断不灵敏带来的多次请求问题
-                $('body').attr('data-status', 'false');
-            }
-      
-        }*/
-
-        $('.fakeshake').click(function(event) {
+        function shakeEventDidOccur () {
             /* Act on the event */
             if($('body').attr('data-status')=='true' && $('.e-action').is(":visible")){
                 socket.emit('shakePhone',$('body').attr('data-bind'));
@@ -77,15 +69,18 @@
                 $('body').attr('data-status', 'false');
                 $('.e-action').hide();
 
-
                 $('.e-waiting-shake').fadeIn(200)//显示等待对方摇一摇
 
                 //摇晃时添加动态效果
                 var shakeEle=$('body').attr('data-bind');
                 $("#"+shakeEle).addClass('ui-mobile-shake');
 
+                /*play the audio eff*/
+                audioEle.play()
+
             }
-        });
+      
+        }
 
         socket.on('backResult',function(data){
             $('.e-waiting-shake').hide();
@@ -127,7 +122,6 @@
     
     <!-- 手机操作不同状态显示 -->
     <div class="ui-mobile-status">
-        <input type="button" value="fakeshake" class="fakeshake">
         <ul>
             <li class="waiting e-waiting"><img src="../images/enter/waiting.png" alt="" width="240"></li>
             <li class="ui-mobile-action e-action">
@@ -146,5 +140,11 @@
             <li class="equal"><img src="../images/mobile/equal.png" alt=""></li>
         </ul>
     </div>
+</div>
+<!-- sound panel -->
+<div style="display: none">
+    <audio id="e-audio">
+        <source src="../sound/shake.mp3" type="audio/mpeg">
+    </audio>
 </div>
 </body>
